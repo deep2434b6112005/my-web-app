@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <!-- head -->
+    <header>
+        <div class="navbar">
+            <div class="logo">WalkBuddy</div>
+            <nav>
+                <ul>
+                    <li><a href="login.html" class="login-btn">Login</a></li>
+                    <li><a href="register.html" class="register-btn">Register</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Login Form -->
+    <div class="form-container">
+       <form class="login-form" action="http://localhost:3000/login" method="POST">
+    <h2>Account Login</h2>
+    <hr>
+    <div class="input-box">
+        <span class="icon">👤</span>
+        <input type="email" name="email" placeholder="Enter your email" required>
+    </div>
+    <div class="input-box">
+        <span class="icon">🔒</span>
+        <input type="password" name="password" placeholder="Enter your password" required>
+    </div>
+    <div class="options">
+        <label><input type="checkbox"> Remember Me</label>
+    </div>
+    <button type="submit" class="login-submit">Login</button>
+</form>
+
+    </div>
+</body>
+</html>
