@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WalkBuddy - Dashboard</title>
+  <link rel="stylesheet" href="walk.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="navbar">
+      <div class="logo">WalkBuddy</div>
+      <nav>
+        <ul>
+          <li><a href="walk.html">Home</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <div class="dashboard">
+    <!-- Friends List Section -->
+    <section class="friends-section">
+      <h2>👫 My Friends</h2>
+      <ul id="friendsList"></ul>
+    </section>
+
+    <!-- Registered Users Section -->
+    <section class="users-section">
+      <h2>🌍 All Registered Users</h2>
+      <input type="text" id="searchInput" placeholder="Search users by name or email..." />
+      <ul id="usersList"></ul>
+    </section>
+  </div>
+
+
+  
+<!--bar home,map,friends,bookmark,profile-->
+<div class="bar" >
+
+  <p style="padding-left: 35px;">
+    <i class="fa-solid fa-house"></i>
+    <button style="border: none;background-color: white;" onclick="window.location.replace('walk.html')">HOME</button>
+  </p>
+  <p>
+    <i class="fa-solid fa-map-location-dot"></i>
+    <button style="border: none;background-color: white;" >MAP</button>
+  </p>
+  <p>
+    <i class="fa-solid fa-user-group"></i>
+    <button style="border: none;background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button>
+  </p>
+  <p>
+    <i class="fa-solid fa-bookmark"></i>
+  <button style="border: none;background-color: white;">BOOKMARK</button>
+  </p>
+  <p>
+    <i class="fa-solid fa-user"></i>
+  <button style="border: none;background-color: white;" onclick="">PROFILE</button>  
+  </p>
+</div>
+
+  <script>
+    const friendsList = document.getElementById("friendsList");
+    const usersList = document.getElementById("usersList");
+    const searchInput = document.getElementById("searchInput");
+
+    let friends = JSON.parse(localStorage.getItem("friends")) || [];
+
+    // Load all users from backend
+    async function loadUsers(search = "") {
+      const res = await fetch(`/users?search=${search}`);
+      const users = await res.json();
+
+      usersList.innerHTML = "";
+      users.forEach(user => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="user-card">
+            <div>
+              <strong>${user.name}</strong><br>
+              <small>${user.email}</small>
+            </div>
+            <div class="actions">
+              <button onclick="viewProfile('${user.name}', '${user.email}')">View</button>
+              <button onclick="addFriend('${user.name}', '${user.email}')">Invite</button>
+            </div>
+          </div>
+        `;
+        usersList.appendChild(li);
+      });
+    }
+
+    // Add to friends list
+    function addFriend(name, email) {
+      if (friends.find(f => f.email === email)) {
+        alert("Already in your friends list!");
+        return;
+      }
+      friends.push({ name, email });
+      localStorage.setItem("friends", JSON.stringify(friends));
+      renderFriends();
+    }
+
+    // Render friends list
+    function renderFriends() {
+      friendsList.innerHTML = "";
+      friends.forEach(friend => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="user-card">
+            <div>
+              <strong>${friend.name}</strong><br>
+              <small>${friend.email}</small>
+            </div>
+            <div class="actions">
+              <button onclick="viewProfile('${friend.name}', '${friend.email}')">View</button>
+              <button onclick="removeFriend('${friend.email}')">Remove</button>
+            </div>
+          </div>
+        `;
+        friendsList.appendChild(li);
+      });
+    }
+
+    function removeFriend(email) {
+      friends = friends.filter(f => f.email !== email);
+      localStorage.setItem("friends", JSON.stringify(friends));
+      renderFriends();
+    }
+
+    // View profile popup
+    function viewProfile(name, email) {
+      alert(`👤 Name: ${name}\n📧 Email: ${email}`);
+    }
+
+    // Search users
+    searchInput.addEventListener("input", e => {
+      loadUsers(e.target.value);
+    });
+
+    // Initial load
+    loadUsers();
+    renderFriends();
+
+    // Auto-refresh every 10 seconds for new registrations
+    setInterval(() => loadUsers(searchInput.value), 10000);
+  </script>
+</body>
+</html>
