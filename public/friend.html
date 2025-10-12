@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WalkBuddy - Dashboard</title>
-  <link rel="stylesheet" href="walk.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>WalkBuddy - Friends</title>
+   <link rel="stylesheet" href="walk.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" />
 </head>
 <body>
   <!-- Header -->
@@ -15,54 +15,33 @@
       <nav>
         <ul>
           <li><a href="walk.html">Home</a></li>
-          <li><a href="login.html">Logout</a></li>
+          <li><a href="login.html" onclick="logout()">Logout</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Main Dashboard -->
+  <!-- Dashboard -->
   <div class="dashboard">
-    <!-- Friends List Section -->
     <section class="friends-section">
       <h2>👫 My Friends</h2>
       <ul id="friendsList"></ul>
     </section>
 
-    <!-- Registered Users Section -->
     <section class="users-section">
       <h2>🌍 All Registered Users</h2>
       <input type="text" id="searchInput" placeholder="Search users by name or email..." />
       <ul id="usersList"></ul>
     </section>
   </div>
-
-
-  
-<!--bar home,map,friends,bookmark,profile-->
-<div class="bar" >
-
-  <p style="padding-left: 35px;">
-    <i class="fa-solid fa-house"></i>
-    <button style="border: none;background-color: white;" onclick="window.location.replace('walk.html')">HOME</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-map-location-dot"></i>
-    <button style="border: none;background-color: white;" >MAP</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-user-group"></i>
-    <button style="border: none;background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-bookmark"></i>
-  <button style="border: none;background-color: white;">BOOKMARK</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-user"></i>
-  <button style="border: none;background-color: white;" onclick="">PROFILE</button>  
-  </p>
-</div>
+   <!-- Navigation bar -->
+  <div class="bar">
+   <p style="padding-left: 35px;"><i class="fa-solid fa-house"></i><button style="border: none;background-color: white;" onclick="window.location.replace('walk.html')">HOME</button></p>
+    <p><i class="fa-solid fa-map-location-dot"></i> <button style="border: none;background-color: white;" onclick="window.location.replace('map.html')">MAP</button></p>
+    <p><i class="fa-solid fa-user-group"></i> <button style="border: none;background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button></p>
+    <p><i class="fa-solid fa-bookmark"></i> <button style="border: none;background-color: white;">BOOKING</button></p>
+    <p><i class="fa-solid fa-user"></i> <button style="border: none;background-color: white;">PROFILE</button></p>
+  </div>
 
   <script>
     const friendsList = document.getElementById("friendsList");
@@ -71,9 +50,12 @@
 
     let friends = JSON.parse(localStorage.getItem("friends")) || [];
 
-    // Load all users from backend
+    // 🧠 Load all users (except current)
     async function loadUsers(search = "") {
-      const res = await fetch(`/users?search=${search}`);
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      const currentEmail = currentUser?.email || "";
+
+      const res = await fetch(`/users?search=${encodeURIComponent(search)}&currentUserEmail=${encodeURIComponent(currentEmail)}`);
       const users = await res.json();
 
       usersList.innerHTML = "";
@@ -95,7 +77,6 @@
       });
     }
 
-    // Add to friends list
     function addFriend(name, email) {
       if (friends.find(f => f.email === email)) {
         alert("Already in your friends list!");
@@ -106,7 +87,6 @@
       renderFriends();
     }
 
-    // Render friends list
     function renderFriends() {
       friendsList.innerHTML = "";
       friends.forEach(friend => {
@@ -133,21 +113,24 @@
       renderFriends();
     }
 
-    // View profile popup
     function viewProfile(name, email) {
       alert(`👤 Name: ${name}\n📧 Email: ${email}`);
     }
 
-    // Search users
+    function logout() {
+      localStorage.removeItem("currentUser");
+    }
+
+    // Search bar
     searchInput.addEventListener("input", e => {
       loadUsers(e.target.value);
     });
 
     // Initial load
-    loadUsers();
     renderFriends();
+    loadUsers();
 
-    // Auto-refresh every 10 seconds for new registrations
+    // Auto-refresh every 10 seconds
     setInterval(() => loadUsers(searchInput.value), 10000);
   </script>
 </body>
