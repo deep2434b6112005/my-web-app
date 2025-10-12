@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Slot | WalkBuddy</title>
+  <link rel="stylesheet" href="walk.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+  <style>
+    body { font-family: Poppins, sans-serif; background: #f8f9fa; text-align: center; }
+    .container { max-width: 600px; margin: 40px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    select, input, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>📅 Book a Walk Slot</h2>
+    
+    <!-- ✅ userEmail auto-filled from localStorage -->
+    <input type="email" id="userEmail" placeholder="Your Email" readonly required>
+    
+    <label for="date">Select Date:</label>
+    <input type="date" id="date" required>
+
+    <label for="buddy">Select Buddy:</label>
+    <select id="buddy"></select>
+
+    <label for="slot">Select Time Slot:</label>
+    <select id="slot">
+      <option>6:00 AM - 7:00 AM</option>
+      <option>7:00 AM - 8:00 AM</option>
+      <option>8:00 AM - 9:00 AM</option>
+      <option>5:00 PM - 6:00 PM</option>
+      <option>6:00 PM - 7:00 PM</option>
+    </select>
+
+    <button id="sendInvite">Send Invite</button>
+
+    <h3>📨 Your Invites</h3>
+    <div id="inviteList"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bar">
+    <p style="padding-left: 35px;"><i class="fa-solid fa-house"></i>
+      <button style="border: none;background-color: white;" onclick="window.location.replace('walk.html')">HOME</button>
+    </p>
+    <p><i class="fa-solid fa-map-location-dot"></i>
+      <button style="border: none;background-color: white;" onclick="window.location.replace('map.html')">MAP</button>
+    </p>
+    <p><i class="fa-solid fa-user-group"></i>
+      <button style="border: none;background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button>
+    </p>
+    <p><i class="fa-solid fa-bookmark"></i>
+      <button style="border: none;background-color: white;">BOOKING</button>
+    </p>
+    <p><i class="fa-solid fa-user"></i>
+      <button style="border: none;background-color: white;" onclick="logout()">LOGOUT</button>
+    </p>
+  </div>
+
+  <script>
+    const buddySelect = document.getElementById("buddy");
+    const userEmailInput = document.getElementById("userEmail");
+    const inviteList = document.getElementById("inviteList");
+
+    // ✅ Load logged-in user from localStorage
+    const currentUser = localStorage.getItem("userEmail");
+    if (!currentUser) {
+      alert("Please log in first!");
+      window.location.href = "login.html";
+    } else {
+      userEmailInput.value = currentUser;
+    }
+
+    // ✅ Load all registered users (except current user)
+    async function loadUsers() {
+      try {
+        const res = await fetch("/users");
+        const users = await res.json();
+        buddySelect.innerHTML = "";
+        users.forEach(u => {
+          if (u.email !== currentUser) { // avoid inviting self
+            const opt = document.createElement("option");
+            opt.value = u.email;
+            opt.textContent = `${u.name} (${u.email})`;
+            buddySelect.appendChild(opt);
+          }
+        });
+      } catch (err) {
+        console.error("Error loading users:", err);
+      }
+    }
+
+    // ✅ Send invite to selected buddy
+    async function sendInvite() {
+      const userEmail = userEmailInput.value;
+      const buddyEmail = buddySelect.value;
+      const date = document.getElementById("date").value;
+      const slot = document.getElementById("slot").value;
+
+      if (!userEmail || !buddyEmail || !date) {
+        alert("⚠️ Please fill all fields!");
+        return;
+      }
+
+      const res = await fetch("/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userEmail, buddyEmail, date, slot })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      loadInvites();
+    }
+
+    // ✅ Load invites for the logged-in user
+    async function loadInvites() {
+      const email = userEmailInput.value;
+      if (!email) return;
+
+      const res = await fetch(`/invites?email=${email}`);
+      const invites = await res.json();
+      inviteList.innerHTML = invites.map(invite => `
+        <div style="border:1px solid #ddd; padding:10px; border-radius:8px; margin:8px 0;">
+          <strong>From:</strong> ${invite.userEmail}<br>
+          <strong>Date:</strong> ${invite.date} | <strong>Slot:</strong> ${invite.slot}<br>
+          <strong>Status:</strong> ${invite.status}
+          ${invite.status === 'pending' ? `
+            <button onclick="respond('${invite._id}','accepted')">✅ Accept</button>
+            <button onclick="respond('${invite._id}','rejected')">❌ Reject</button>
+          ` : ""}
+        </div>
+      `).join('');
+    }
+
+    // ✅ Respond to an invite
+    async function respond(id, status) {
+      const res = await fetch("/respond-invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status })
+      });
+      const data = await res.json();
+      alert(data.message);
+      loadInvites();
+    }
+
+    // ✅ Logout button clears localStorage
+    function logout() {
+      localStorage.removeItem("userEmail");
+      alert("Logged out!");
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("sendInvite").addEventListener("click", sendInvite);
+
+    // Load users + invites initially
+    loadUsers();
+    loadInvites();
+  </script>
+</body>
+</html>

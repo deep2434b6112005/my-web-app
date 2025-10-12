@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <link rel="stylesheet" href="walk.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    
+  <!-- ✅ MAP SECTION (Leaflet) -->
+  <h2 style="margin-left:20px;">Nearby Walk Buddies</h2>
+  <div id="map" style="height: 500px; width: 95%; margin: 20px auto; border-radius:10px;"></div>
+  
+  
+  <!-- Navigation bar -->
+  <div class="bar">
+<p style="padding-left: 35px;"><i class="fa-solid fa-house"></i><button style="border: none;background-color: white;" onclick="window.location.replace('walk.html')">HOME</button></p>
+    <p><i class="fa-solid fa-map-location-dot"></i> <button style="border: none;background-color: white;" onclick="window.location.replace('map.html')">MAP</button></p>
+    <p><i class="fa-solid fa-user-group"></i> <button style="border: none;background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button></p>
+    <p><i class="fa-solid fa-bookmark"></i> <button style="border: none;background-color: white;">BOOKING</button></p>
+    <p><i class="fa-solid fa-user"></i> <button style="border: none;background-color: white;">PROFILE</button></p>
+  </div>
+
+  <script>
+    const userEmail = localStorage.getItem('email') || prompt("Enter your email (for demo):");
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      alert("Geolocation not supported.");
+    }
+
+    async function success(pos) {
+      const { latitude, longitude } = pos.coords;
+
+      // Update location in backend
+      await fetch("/update-location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail, latitude, longitude }),
+      });
+
+      initMap(latitude, longitude);
+    }
+
+    function error() {
+      alert("Please allow location access to find nearby buddies.");
+    }
+
+    async function initMap(lat, lng) {
+      const map = L.map('map').setView([lat, lng], 14);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Add user marker
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup("<b>You are here</b>").openPopup();
+
+      // Fetch nearby users
+      const res = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
+      const users = await res.json();
+
+      users.forEach(u => {
+        if (u.location && u.location.coordinates) {
+          const [lng, lat] = u.location.coordinates;
+          L.marker([lat, lng]).addTo(map)
+            .bindPopup(`<b>${u.name}</b><br>${u.email}`);
+        }
+      });
+    }
+    
+ 
+</script>
+</body>
+</html>
