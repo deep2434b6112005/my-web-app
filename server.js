@@ -186,10 +186,11 @@ app.get("/users", async (req, res) => {
 
 // Serve frontend for all other routes (catch-all)
 app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
