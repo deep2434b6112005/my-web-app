@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -12,26 +13,44 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public"))); // serve frontend files
 
-// MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/userDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+console.log("Mongo URI:", process.env.MONGODB_URI);
 
-// Schema: Users
+
+// MongoDB connection string
+const uri = process.env.MONGODB_URI;
+
+// Connect to MongoDB
+mongoose.connect(uri)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch(err => console.error("MongoDB connection error:", err));
+
+//
+// ---------- USER SCHEMA ----------
+//
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
   location: {
-    type: { type: String, default: "Point" },
-    coordinates: [Number], // [lng, lat]
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+      default: [0, 0], // placeholder until updated
+    },
   },
 });
+
+// Create a 2dsphere index for geospatial queries
 userSchema.index({ location: "2dsphere" });
 const User = mongoose.model("User", userSchema);
 
-// Schema: Booking (used for Invites)
+//
+// ---------- BOOKING SCHEMA ----------
+//
 const bookingSchema = new mongoose.Schema({
   userEmail: String,
   buddyEmail: String,
@@ -65,12 +84,11 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email, password });
-   if (user) {
-  res.json({ success: true, redirect: `/walk.html?user=${email}` });
-} else {
-  res.json({ success: false, message: "❌ Invalid credentials." });
-}
-
+    if (user) {
+      res.json({ success: true, redirect: `/walk.html?user=${email}` });
+    } else {
+      res.json({ success: false, message: "❌ Invalid credentials." });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send("❌ Error logging in.");
@@ -86,7 +104,8 @@ app.post("/update-location", async (req, res) => {
       { location: { type: "Point", coordinates: [longitude, latitude] } }
     );
     res.json({ message: "📍 Location updated successfully" });
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).send("❌ Error updating location.");
   }
 });
@@ -104,7 +123,8 @@ app.get("/nearby", async (req, res) => {
       },
     });
     res.json(users);
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).send("❌ Error fetching nearby users.");
   }
 });
