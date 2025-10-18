@@ -11,15 +11,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public"))); // serve frontend files
 
-console.log("Mongo URI:", process.env.MONGODB_URI);
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, "public")));
 
-
-// MongoDB connection string
+// MongoDB connection
 const uri = process.env.MONGODB_URI;
+console.log("Mongo URI:", uri);
 
-// Connect to MongoDB
 mongoose.connect(uri)
   .then(() => console.log("MongoDB connected successfully"))
   .catch(err => console.error("MongoDB connection error:", err));
@@ -39,12 +38,10 @@ const userSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number],
-      default: [0, 0], // placeholder until updated
+      default: [0, 0],
     },
   },
 });
-
-// Create a 2dsphere index for geospatial queries
 userSchema.index({ location: "2dsphere" });
 const User = mongoose.model("User", userSchema);
 
@@ -56,7 +53,7 @@ const bookingSchema = new mongoose.Schema({
   buddyEmail: String,
   slot: String,
   date: String,
-  status: { type: String, default: "pending" }, // pending | accepted | rejected
+  status: { type: String, default: "pending" },
 });
 const Booking = mongoose.model("Booking", bookingSchema);
 
@@ -70,7 +67,6 @@ app.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.send("⚠️ Email already registered.");
-
     await new User({ name, email, password }).save();
     res.redirect("/login.html");
   } catch (err) {
@@ -129,19 +125,12 @@ app.get("/nearby", async (req, res) => {
   }
 });
 
-//
-// ---------- INVITE SYSTEM ----------
-//
-
-// Send invite (pending by default)
+// Send invite
 app.post("/invite", async (req, res) => {
   try {
     const { userEmail, buddyEmail, slot, date } = req.body;
-
-    // Prevent duplicates
     const existing = await Booking.findOne({ userEmail, buddyEmail, date, slot });
     if (existing) return res.json({ message: "⚠️ Invite already sent." });
-
     await new Booking({ userEmail, buddyEmail, slot, date }).save();
     res.json({ message: "📩 Invite sent successfully!" });
   } catch (err) {
@@ -150,15 +139,12 @@ app.post("/invite", async (req, res) => {
   }
 });
 
-// Get invites (for a buddy)
+// Get invites
 app.get("/invites", async (req, res) => {
   try {
     const { email } = req.query;
     const invites = await Booking.find({
-      $or: [
-        { buddyEmail: email }, // received
-        { userEmail: email },  // sent
-      ],
+      $or: [{ buddyEmail: email }, { userEmail: email }],
     });
     res.json(invites);
   } catch (err) {
@@ -167,7 +153,7 @@ app.get("/invites", async (req, res) => {
   }
 });
 
-// Accept or reject invite
+// Accept/reject invite
 app.post("/respond-invite", async (req, res) => {
   try {
     const { id, status } = req.body;
@@ -179,16 +165,11 @@ app.post("/respond-invite", async (req, res) => {
   }
 });
 
-//
-// ---------- FRIENDS / USERS ----------
-//
-
-// Get all registered users (for Friends page)
+// Get all users (for friends page)
 app.get("/users", async (req, res) => {
   try {
     const search = req.query.search || "";
     const currentUserEmail = req.query.currentUserEmail || "";
-
     const users = await User.find({
       email: { $ne: currentUserEmail },
       $or: [
@@ -196,18 +177,22 @@ app.get("/users", async (req, res) => {
         { email: { $regex: search, $options: "i" } },
       ],
     }).select("name email -_id");
-
     res.json(users);
   } catch (err) {
-    console.error("❌ Error fetching users:", err);
+    console.error(err);
     res.status(500).send("Error fetching users");
   }
 });
 
 //
-// =========================================================
+// ---------- Serve frontend for all other routes ----------
 //
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
-app.listen(3000, () =>
-  console.log("🚀 Server running on http://localhost:3000")
-);
+// ---------- Start server ----------
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
