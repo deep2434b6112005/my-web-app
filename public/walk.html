@@ -4,100 +4,267 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WalkBuddy</title>
+
   <link rel="stylesheet" href="walk.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" />
+
+  <!-- Leaflet CSS (Free Map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
-<body>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6;">
+
   <!-- Top header -->
-  <div class="head" style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
-    <h1 style="color: blue;">WalkBuddy</h1>
-    <div class="profile-menu">
-      <button class="profile-button">M</button>
-      <div class="dropdown-content">
-        <a href="#">Find Friends</a>
-        <a href="#">My Profile</a>
-        <a href="#">Settings</a>
-        <a href="#">Apps</a>
-        <a href="#">Subscriber Perks</a>
-        <a href="#">Log Out</a>
-      </div>
-    </div>
-  </div>
+  <header style="background-color: #ffffff; padding: 15px 0; border-bottom: 1px solid #e0e0e0;">
+    <nav style="padding-left: 40px;">
+      <div style="font-size: 24px; font-weight: bold; color: #1e8449;">WalkBuddy</div>
+    </nav>
+  </header>
 
   <!-- Intro Section -->
   <div class="intro" style="display:flex; align-items:center; gap:20px; padding:20px;">
-    
-    <!-- Image -->
-    <div style="flex:1;">
-      <img src="image/walk.webp" alt="Walking buddies" style="border-radius:10px; max-width:100%; height:auto;">
-      
+    <div class="intro-left" style="flex:1;">
+      <h1 style="color: #1e8449; font-size: 55px; margin-top: 0;">
+        Find walking buddies nearby — walk safer, walk happier
+      </h1>
+      <p style="color: #4a4a4a; line-height: 1.6; font-size: 20px;">
+        Connect with like-minded individuals in your community who share your passion for walking.
+        Enjoy the benefits of exercise, fresh air, and great company.
+      </p>
+      <div>
+        <button style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">
+          Find a Walk
+        </button>
+        <button style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">
+          Browse Buddies
+        </button>
+      </div>
     </div>
 
-    <!-- Text -->
-    <div class="intro-left" style="flex:1;">
-      <h1 style="font-size:60px;">Find walking buddies nearby — walk safer, walk happier</h1>
-      <p style="font-size:30px;">Quickly find local walkers by time, pace, and route. Schedule walks, RSVP, and share routes.</p>
-      <div>
-        <button style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">Explore buddies</button>
-        <button style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">Favorite Companion</button>
+    <div style="flex:1;">
+      <img src="image/walk2.webp" alt="Walking buddies" style="border-radius:10px; max-width:100%; height:auto;">
+    </div>
+  </div>
+
+  <!-- Quick Book -->
+  <div>
+    <div>
+      <h1>Quick Book</h1>
+      <div style="display: flex;">
+        <div style="background-color: white; padding: 20px; border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
+          <img src="image/morning1.webp" style="width: 430px; height: 430px; border-radius: 20px;" class="slot">
+          <h3 style="color: #4a4a4a; margin-top: 0; font-size: 18px;">Morning Stroll 🌅</h3>
+          <p style="color: #757575; font-size: 14px;">
+            Kickstart your day with a refreshing walk. Connect with early birds and enjoy the quiet beauty of dawn.
+          </p>
+        </div>
+
+        <div style="background-color: white; padding: 20px; border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
+          <img src="image/evening1.webp" style="width: 430px; height: 430px; border-radius: 20px;" class="slot">
+          <h3 style="color: #4a4a4a; margin-top: 0; font-size: 18px;">Evening Walk 🌆</h3>
+          <p style="color: #757575; font-size: 14px;">
+            Unwind after a long day. Perfect for a relaxed pace and friendly chats as the day winds down.
+          </p>
+        </div>
+
+        <div style="background-color: white; padding: 20px; border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;">
+          <img src="image/week1.webp" style="width: 430px; height: 430px; border-radius: 20px;" class="slot">
+          <h3 style="color: #4a4a4a; margin-top: 0; font-size: 18px;">Weekend Hike 🌲</h3>
+          <p style="color: #757575; font-size: 14px;">
+            Explore nature trails and challenge yourself with invigorating weekend excursions.
+            Discover new routes!
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
-<div style="margin-bottom: 20px;">
-<div>
-  <h1>Quick Book</h1>
-<div style="display: flex;">
-  <!--morning-->
-  <div style="margin: 20px;">
-    <img src="image/morning.webp" style="width: 480px; height: 480px; border-radius: 20px;" class="slot"> 
-    <h2>Morning Stroll</h2>
-    <h3>6:00 AM - 7:00 AM</h3>
+<!-- DASHBOARD SECTION -->
+<section id="dashboard">
+  <h1>Your Walk Dashboard</h1>
+
+  <div id="dashboard-content">
+    <!-- Nearby Walks -->
+    <div class="dashboard-box">
+      <h2>Walks Nearby</h2>
+      <ul id="nearbyList">
+        <li>Loading nearby walks...</li>
+      </ul>
+      <a href="map.html">View All Nearby Walkers →</a>
+    </div>
+
+    <!-- Next Walk -->
+    <div class="dashboard-box">
+      <h2>Your Next Walk</h2>
+      <div id="nextWalk">
+        <p>Loading next walk...</p>
+      </div>
+      <a href="bookslot.html">View Details</a>
+    </div>
+
+    <!-- Walk Buddies -->
+    <div class="dashboard-box">
+      <h2>Your Walk Buddies</h2>
+      <ul id="buddyList">
+        <li>Loading buddies...</li>
+      </ul>
+      <a href="friend.html">Manage Buddies</a>
+    </div>
   </div>
-<!--evening-->
-  <div style="margin: 20px;" >
-    <img src="image/evening.webp" style="width: 480px; height: 480px; border-radius: 20px; " class="slot"> 
-    <h2>Evening Walk</h2>
-    <h3>6:00 PM - 7:00 PM</h3>
-  </div>
-<!--week end-->
-  <div style="margin: 20px; padding-right: 20px;">
-    <img src="image/week.webp" style="width: 480px; height: 480px; border-radius: 20px;" class="slot"> 
-    <h2>Weekend Hike </h2>
-      <h3>9:00 AM -11:00 AM<h3>
-    
-    
-  </div>
+</section>
+
+
+
+  <!-- Navigation bar -->
+  <div class="bar" style="margin-top: 1px;">
+    <p style="padding-left: 35px;">
+      <i class="fa-solid fa-house"></i>
+      <button style="border: none; background-color: white;" onclick="window.location.replace('walk.html')">HOME</button>
+    </p>
+    <p>
+      <i class="fa-solid fa-map-location-dot"></i>
+      <button style="border: none; background-color: white;" onclick="window.location.replace('map.html')">MAP</button>
+    </p>
+    <p>
+      <i class="fa-solid fa-user-group"></i>
+      <button style="border: none; background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button>
+    </p>
+    <p>
+      <i class="fa-solid fa-bookmark"></i>
+      <button style="border: none; background-color: white;" onclick="window.location.replace('bookslot.html')">BOOKING</button>
+    </p>
+    <p>
+      <i class="fa-solid fa-user"></i>
+      <button style="border: none; background-color: white;">PROFILE</button>
+    </p>
   </div>
 
-</div>
-</div>
+  <script>
+    // ✅ Slot booking
+    document.querySelectorAll('.slot').forEach(img => {
+      img.addEventListener('click', async () => {
+        const slotTitle = img.nextElementSibling.textContent;
+        const confirmBooking = confirm(`Book ${slotTitle}?`);
+        if (!confirmBooking) return;
 
-<!--bar home,map,friends,bookmark,profile-->
-<div class="bar" >
+        const today = new Date().toISOString().split('T')[0];
 
-  <p style="padding-left: 35px;">
-    <i class="fa-solid fa-house"></i>
-    <button style="border: none;background-color: white;">HOME</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-map-location-dot"></i>
-    <button style="border: none;background-color: white;" >MAP</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-user-group"></i>
-    <button style="border: none;background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-bookmark"></i>
-  <button style="border: none;background-color: white;">BOOKMARK</button>
-  </p>
-  <p>
-    <i class="fa-solid fa-user"></i>
-  <button style="border: none;background-color: white;" onclick="">PROFILE</button>  
-  </p>
-</div>
+        const res = await fetch("/book", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userEmail,
+            buddyEmail: "buddy@example.com",
+            slot: slotTitle,
+            date: today,
+          }),
+        });
+
+        const data = await res.json();
+        alert(data.message);
+      });
+    });
+
+
+
+
+
+  // Get logged in user from URL (like ?user=email@example.com)
+  const urlParams = new URLSearchParams(window.location.search);
+  const userEmail = urlParams.get("user");
+
+  // ===== Load Nearby Users =====
+  async function loadNearby() {
+    if (!navigator.geolocation) {
+      document.getElementById("nearbyList").innerHTML = "<li>Location not supported</li>";
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      const res = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
+      const users = await res.json();
+
+      const list = document.getElementById("nearbyList");
+      list.innerHTML = "";
+
+      if (users.length === 0) {
+        list.innerHTML = "<li>No nearby walkers found</li>";
+      } else {
+        users.forEach(u => {
+          const li = document.createElement("li");
+          li.textContent = `${u.name} (${u.email})`;
+          list.appendChild(li);
+        });
+      }
+    });
+  }
+
+  // ===== Load Next Walk =====
+  async function loadNextWalk() {
+    const res = await fetch(`/invites?email=${userEmail}`);
+    const invites = await res.json();
+    const nextWalkDiv = document.getElementById("nextWalk");
+
+    if (invites.length === 0) {
+      nextWalkDiv.innerHTML = "<p>No upcoming walks booked.</p>";
+      return;
+    }
+
+    const next = invites[0];
+    nextWalkDiv.innerHTML = `
+      <p><b>Date:</b> ${next.date}</p>
+      <p><b>Slot:</b> ${next.slot}</p>
+      <p><b>Status:</b> ${next.status}</p>
+      <p><b>With:</b> ${next.buddyEmail}</p>
+    `;
+  }
+
+  // ===== Load Buddies =====
+  async function loadBuddies() {
+    const res = await fetch(`/invites?email=${userEmail}`);
+    const invites = await res.json();
+
+    const buddyList = document.getElementById("buddyList");
+    buddyList.innerHTML = "";
+
+    if (invites.length === 0) {
+      buddyList.innerHTML = "<li>No buddies yet.</li>";
+      return;
+    }
+
+    const buddies = new Set();
+    invites.forEach(i => {
+      buddies.add(i.userEmail === userEmail ? i.buddyEmail : i.userEmail);
+    });
+
+    buddies.forEach(b => {
+      const li = document.createElement("li");
+      li.textContent = b;
+      buddyList.appendChild(li);
+    });
+  }
+
+  // ===== Initialize Dashboard =====
+  window.addEventListener("load", () => {
+    if (!userEmail) {
+      alert("Please log in first!");
+      window.location.href = "/login.html";
+      return;
+    }
+
+    loadNearby();
+    loadNextWalk();
+    loadBuddies();
+  });
+
+  </script>
+
 </body>
 </html>
-
