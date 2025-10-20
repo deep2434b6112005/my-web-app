@@ -7,7 +7,7 @@ const cors = require("cors");
 
 const app = express();
 
-// Middleware
+// ===================== MIDDLEWARE =====================
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -15,17 +15,16 @@ app.use(bodyParser.json());
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, "public")));
 
-// MongoDB connection
+// ===================== MONGODB CONNECTION =====================
 const uri = process.env.MONGODB_URI;
 console.log("Mongo URI:", uri);
 
-mongoose.connect(uri)
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch(err => console.error("MongoDB connection error:", err));
+mongoose
+  .connect(uri)
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-//
-// ---------- USER SCHEMA ----------
-//
+// ===================== USER SCHEMA =====================
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -42,31 +41,34 @@ const userSchema = new mongoose.Schema({
     },
   },
 });
+
 userSchema.index({ location: "2dsphere" });
 const User = mongoose.model("User", userSchema);
 
-//
-// ---------- BOOKING SCHEMA ----------
-//
+// ===================== BOOKING SCHEMA =====================
 const bookingSchema = new mongoose.Schema({
   userEmail: String,
   buddyEmail: String,
   slot: String,
   date: String,
-  status: { type: String, default: "pending" },
+  status: {
+    type: String,
+    default: "pending",
+  },
 });
+
 const Booking = mongoose.model("Booking", bookingSchema);
 
-//
-// ======================== ROUTES ========================
-//
+// ======================== ROUTES ======================== //
 
-// Register user
+// ---------- Register User ----------
 app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const existingUser = await User.findOne({ email });
+
     if (existingUser) return res.send("⚠️ Email already registered.");
+
     await new User({ name, email, password }).save();
     res.redirect("/login.html");
   } catch (err) {
@@ -75,49 +77,51 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Login
+// ---------- Login and Update Location ----------
 app.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, latitude, longitude } = req.body;
+
+    // 1️⃣ Verify user credentials
     const user = await User.findOne({ email, password });
-    if (user) {
-      res.json({ success: true, redirect: `/walk.html?user=${email}` });
-    } else {
-      res.json({ success: false, message: "❌ Invalid credentials." });
+    if (!user) {
+      return res.json({ success: false, message: "❌ Invalid credentials." });
     }
+
+    // 2️⃣ Update location if available
+    if (latitude && longitude) {
+      await User.updateOne(
+        { email },
+        { location: { type: "Point", coordinates: [longitude, latitude] } }
+      );
+      console.log(`📍 Location updated for ${email}`);
+    }
+
+    // 3️⃣ Respond with redirect URL
+    res.json({ success: true, redirect: `/walk.html?user=${email}` });
   } catch (err) {
     console.error(err);
     res.status(500).send("❌ Error logging in.");
   }
 });
 
-// Update user location
-app.post("/update-location", async (req, res) => {
-  try {
-    const { email, latitude, longitude } = req.body;
-    await User.updateOne(
-      { email },
-      { location: { type: "Point", coordinates: [longitude, latitude] } }
-    );
-    res.json({ message: "📍 Location updated successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("❌ Error updating location.");
-  }
-});
-
-// Find nearby users
+// ---------- Find Nearby Users ----------
 app.get("/nearby", async (req, res) => {
   try {
     const { lat, lng } = req.query;
+
     const users = await User.find({
       location: {
         $near: {
-          $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+          $geometry: {
+            type: "Point",
+            coordinates: [parseFloat(lng), parseFloat(lat)],
+          },
           $maxDistance: 2000,
         },
       },
     });
+
     res.json(users);
   } catch (err) {
     console.error(err);
@@ -125,12 +129,14 @@ app.get("/nearby", async (req, res) => {
   }
 });
 
-// Send invite
+// ---------- Send Invite ----------
 app.post("/invite", async (req, res) => {
   try {
     const { userEmail, buddyEmail, slot, date } = req.body;
+
     const existing = await Booking.findOne({ userEmail, buddyEmail, date, slot });
     if (existing) return res.json({ message: "⚠️ Invite already sent." });
+
     await new Booking({ userEmail, buddyEmail, slot, date }).save();
     res.json({ message: "📩 Invite sent successfully!" });
   } catch (err) {
@@ -139,13 +145,15 @@ app.post("/invite", async (req, res) => {
   }
 });
 
-// Get invites
+// ---------- Get Invites ----------
 app.get("/invites", async (req, res) => {
   try {
     const { email } = req.query;
+
     const invites = await Booking.find({
       $or: [{ buddyEmail: email }, { userEmail: email }],
     });
+
     res.json(invites);
   } catch (err) {
     console.error(err);
@@ -153,7 +161,7 @@ app.get("/invites", async (req, res) => {
   }
 });
 
-// Accept/reject invite
+// ---------- Accept/Reject Invite ----------
 app.post("/respond-invite", async (req, res) => {
   try {
     const { id, status } = req.body;
@@ -165,11 +173,12 @@ app.post("/respond-invite", async (req, res) => {
   }
 });
 
-// Get all users (for friends page)
+// ---------- Get All Users (Friends Page) ----------
 app.get("/users", async (req, res) => {
   try {
     const search = req.query.search || "";
     const currentUserEmail = req.query.currentUserEmail || "";
+
     const users = await User.find({
       email: { $ne: currentUserEmail },
       $or: [
@@ -177,6 +186,7 @@ app.get("/users", async (req, res) => {
         { email: { $regex: search, $options: "i" } },
       ],
     }).select("name email -_id");
+
     res.json(users);
   } catch (err) {
     console.error(err);
@@ -184,13 +194,11 @@ app.get("/users", async (req, res) => {
   }
 });
 
-// Serve frontend for all other routes (catch-all)
+// ---------- Catch-All (Serve Frontend) ----------
 app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.sendFile(path.join(__dirname, "public", "login.html"));
 });
 
-// Start server
+// ===================== START SERVER =====================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-
