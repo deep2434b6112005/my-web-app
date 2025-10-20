@@ -39,7 +39,6 @@
       <button type="submit" class="login-submit">Login</button>
     </form>
   </div>
-  
 <script>
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -47,27 +46,36 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  try {
-    const res = await fetch("/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  // Ask for location permission
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const latitude = pos.coords.latitude;
+    const longitude = pos.coords.longitude;
 
-    const data = await res.json();
+    try {
+      // Send login + location in one request
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, latitude, longitude }),
+      });
 
-    if (data.success) {
-      localStorage.setItem("userEmail", email);
-      window.location.href = data.redirect;
-    } else {
-      alert(data.message);
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("userEmail", email);
+        alert("✅ Login successful!");
+        window.location.href = data.redirect;
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error logging in. Make sure the server is running.");
     }
-  } catch (err) {
-    console.error(err);
-    alert("❌ Error logging in. Make sure the server is running.");
-  }
+  }, (err) => {
+    alert("⚠️ Location access denied. Please allow location to continue.");
+  });
 });
 </script>
-
 </body>
 </html>
