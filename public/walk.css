@@ -164,8 +164,11 @@
         background-color: #1e8449;
         color: white;
         padding: 10px 0;
-      }
-      .bar button {
+      }.bar button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         border: none;
         background: none;
         color: white;
@@ -259,7 +262,9 @@
         }
         .bar i {
           font-size: 18px;
+              display:none;
         }
       }
     
+
 
