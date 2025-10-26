@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WalkBuddy</title>
 
   <link rel="stylesheet" href="walk.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    crossorigin="anonymous" />
 
   <!-- Leaflet CSS (Free Map) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -15,37 +17,39 @@
 
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6;">
 
-  <!-- Top header -->
-  <header style="background-color: #ffffff; padding: 15px 0; border-bottom: 1px solid #e0e0e0;">
-    <nav style="padding-left: 40px;">
-      <div style="font-size: 24px; font-weight: bold; color: #1e8449;">WalkBuddy</div>
-    </nav>
-  </header>
+    <header style="background-color: #ffffff; padding: 15px 0; border-bottom: 1px solid #e0e0e0;">
+        <nav style="padding-left: 40px; display: flex;">
+            <div style="font-size: 24px; font-weight: bold; color: #1e8449;">WalkBuddy</div>
+        </nav>
+    </header>
 
-  <!-- Intro Section -->
-  <div class="intro" style="display:flex; align-items:center; gap:20px; padding:20px;">
-    <div class="intro-left" style="flex:1;">
-      <h1 style="color: #1e8449; font-size: 55px; margin-top: 0;">
-        Find walking buddies nearby — walk safer, walk happier
-      </h1>
-      <p style="color: #4a4a4a; line-height: 1.6; font-size: 20px;">
-        Connect with like-minded individuals in your community who share your passion for walking.
-        Enjoy the benefits of exercise, fresh air, and great company.
-      </p>
-      <div>
-        <button style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">
-          Find a Walk
-        </button>
-        <button style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">
-          Browse Buddies
-        </button>
-      </div>
-    </div>
+    <div class="about-the-app">
+        <!--container1-->
+        <div class="about-the-app-container1">
+            <h1 style="color: #1e8449; font-size: 55px; margin-top: 0;">Find walking buddies nearby — walk safer, walk
+                happier </h1>
+            <p style="color: #4a4a4a; line-height: 1.6; font-size: 20px;">Connect with like-minded individuals in your
+                community who share your passion for walking.Enjoy the benefits of exercise, fresh air, and great
+                company.</p>
 
-    <div style="flex:1;">
-      <img src="image/walk2.webp" alt="Walking buddies" style="border-radius:10px; max-width:100%; height:auto;">
+            <div>
+                <button
+                    style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">
+                    Find a Walk
+                </button>
+                <button
+                    style="box-shadow:0 7px 29px rgba(100,100,111,0.2); width:160px; height:50px; border-radius:20px; margin:10px;">
+                    Browse Buddies
+                </button>
+            </div>
+        </div>
+        <!--container2-->
+        <div>
+            <img src="image/walk2.webp" alt="Walking buddies"
+                style="border-radius:10px;">
+        </div>
+
     </div>
-  </div>
 
   <!-- Quick Book -->
   <div>
@@ -83,63 +87,95 @@
     </div>
   </div>
 
-<!-- DASHBOARD SECTION -->
-<section id="dashboard">
-  <h1>Your Walk Dashboard</h1>
+  <!-- DASHBOARD SECTION -->
+  <section id="dashboard">
+    <h1>Your Walk Dashboard</h1>
 
-  <div id="dashboard-content">
-    <!-- Nearby Walks -->
-    <div class="dashboard-box">
-      <h2>Walks Nearby</h2>
-      <ul id="nearbyList">
-        <li>Loading nearby walks...</li>
-      </ul>
-      <a href="map.html">View All Nearby Walkers →</a>
-    </div>
-
-    <!-- Next Walk -->
-    <div class="dashboard-box">
-      <h2>Your Next Walk</h2>
-      <div id="nextWalk">
-        <p>Loading next walk...</p>
+    <div id="dashboard-content">
+      <!-- Nearby Walks -->
+      <div class="dashboard-box">
+        <h2>Walks Nearby</h2>
+        <ul id="nearbyList">
+          <li>Loading nearby walks...</li>
+        </ul>
+        <a href="map.html">View All Nearby Walkers →</a>
       </div>
-      <a href="bookslot.html">View Details</a>
+
+      <!-- Next Walk -->
+      <div class="dashboard-box">
+        <h2>Your Next Walk</h2>
+        <div id="nextWalk">
+          <p>Loading next walk...</p>
+        </div>
+        <a href="bookslot.html">View Details</a>
+      </div>
+
+      <!-- Walk Buddies -->
+      <div class="dashboard-box">
+        <h2>Your Walk Buddies</h2>
+        <ul id="buddyList">
+          <li>Loading buddies...</li>
+        </ul>
+        <a href="friend.html">Manage Buddies</a>
+      </div>
+    </div>
+  </section>
+
+  <!--encorageing-->
+  <section>
+
+    <div>
+
+      <h1>Unlock Your Walking Pontial With WalkBuddy</h1>
+      <div>
+        <h3>🔒Walk Safer, Always</h3>
+        <p>
+          Share your live location with trusted contacts while on your scheduled walks for peace of mind.</p>
+      </div>
+
+      <div>
+        <h3>🎯Set Group Challenges</h3>
+        <p>Join community distance challenges to stay motivated, hit your fitness targets, and earn badges.</p>
+      </div>
+
+      <div>
+        <h3>🗺️Discover Local Routes</h3>
+        <p>Explore and save popular walking paths rated and reviewed by other WalkBuddy users nearby.</p>
+      </div>
+
+      <div>
+        <h3>💬Connect Instantly</h3>
+        <p>Chat with potential walk buddies, plan your outings, and build lasting friendships with ease.</p>
+      </div>
+
     </div>
 
-    <!-- Walk Buddies -->
-    <div class="dashboard-box">
-      <h2>Your Walk Buddies</h2>
-      <ul id="buddyList">
-        <li>Loading buddies...</li>
-      </ul>
-      <a href="friend.html">Manage Buddies</a>
-    </div>
-  </div>
-</section>
+  </section>
+
 
 
 
   <!-- Navigation bar -->
-  <div class="bar" style="margin-top: 1px;">
-    <p style="padding-left: 35px;">
+  <div class="bar">
+    <p>
       <i class="fa-solid fa-house"></i>
-      <button style="border: none; background-color: white;" onclick="window.location.replace('walk.html')">HOME</button>
+      <button onclick="window.location.replace('walk.html')">HOME</button>
     </p>
     <p>
       <i class="fa-solid fa-map-location-dot"></i>
-      <button style="border: none; background-color: white;" onclick="window.location.replace('map.html')">MAP</button>
+      <button onclick="window.location.replace('map.html')">MAP</button>
     </p>
     <p>
       <i class="fa-solid fa-user-group"></i>
-      <button style="border: none; background-color: white;" onclick="window.location.replace('friend.html')">FRIENDS</button>
+      <button onclick="window.location.replace('friend.html')">FRIENDS</button>
     </p>
     <p>
       <i class="fa-solid fa-bookmark"></i>
-      <button style="border: none; background-color: white;" onclick="window.location.replace('bookslot.html')">BOOKING</button>
+      <button onclick="window.location.replace('bookslot.html')">BOOKING</button>
     </p>
     <p>
       <i class="fa-solid fa-user"></i>
-      <button style="border: none; background-color: white;">PROFILE</button>
+      <button>PROFILE</button>
     </p>
   </div>
 
@@ -173,98 +209,99 @@
 
 
 
-  // Get logged in user from URL (like ?user=email@example.com)
-  const urlParams = new URLSearchParams(window.location.search);
-  const userEmail = urlParams.get("user");
+    // Get logged in user from URL (like ?user=email@example.com)
+    const urlParams = new URLSearchParams(window.location.search);
+    const userEmail = urlParams.get("user");
 
-  // ===== Load Nearby Users =====
-  async function loadNearby() {
-    if (!navigator.geolocation) {
-      document.getElementById("nearbyList").innerHTML = "<li>Location not supported</li>";
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-
-      const res = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
-      const users = await res.json();
-
-      const list = document.getElementById("nearbyList");
-      list.innerHTML = "";
-
-      if (users.length === 0) {
-        list.innerHTML = "<li>No nearby walkers found</li>";
-      } else {
-        users.forEach(u => {
-          const li = document.createElement("li");
-          li.textContent = `${u.name} (${u.email})`;
-          list.appendChild(li);
-        });
+    // ===== Load Nearby Users =====
+    async function loadNearby() {
+      if (!navigator.geolocation) {
+        document.getElementById("nearbyList").innerHTML = "<li>Location not supported</li>";
+        return;
       }
-    });
-  }
 
-  // ===== Load Next Walk =====
-  async function loadNextWalk() {
-    const res = await fetch(`/invites?email=${userEmail}`);
-    const invites = await res.json();
-    const nextWalkDiv = document.getElementById("nextWalk");
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
 
-    if (invites.length === 0) {
-      nextWalkDiv.innerHTML = "<p>No upcoming walks booked.</p>";
-      return;
+        const res = await fetch(`/nearby?lat=${lat}&lng=${lng}`);
+        const users = await res.json();
+
+        const list = document.getElementById("nearbyList");
+        list.innerHTML = "";
+
+        if (users.length === 0) {
+          list.innerHTML = "<li>No nearby walkers found</li>";
+        } else {
+          users.forEach(u => {
+            const li = document.createElement("li");
+            li.textContent = `${u.name} (${u.email})`;
+            list.appendChild(li);
+          });
+        }
+      });
     }
 
-    const next = invites[0];
-    nextWalkDiv.innerHTML = `
+    // ===== Load Next Walk =====
+    async function loadNextWalk() {
+      const res = await fetch(`/invites?email=${userEmail}`);
+      const invites = await res.json();
+      const nextWalkDiv = document.getElementById("nextWalk");
+
+      if (invites.length === 0) {
+        nextWalkDiv.innerHTML = "<p>No upcoming walks booked.</p>";
+        return;
+      }
+
+      const next = invites[0];
+      nextWalkDiv.innerHTML = `
       <p><b>Date:</b> ${next.date}</p>
       <p><b>Slot:</b> ${next.slot}</p>
       <p><b>Status:</b> ${next.status}</p>
       <p><b>With:</b> ${next.buddyEmail}</p>
     `;
-  }
-
-  // ===== Load Buddies =====
-  async function loadBuddies() {
-    const res = await fetch(`/invites?email=${userEmail}`);
-    const invites = await res.json();
-
-    const buddyList = document.getElementById("buddyList");
-    buddyList.innerHTML = "";
-
-    if (invites.length === 0) {
-      buddyList.innerHTML = "<li>No buddies yet.</li>";
-      return;
     }
 
-    const buddies = new Set();
-    invites.forEach(i => {
-      buddies.add(i.userEmail === userEmail ? i.buddyEmail : i.userEmail);
-    });
+    // ===== Load Buddies =====
+    async function loadBuddies() {
+      const res = await fetch(`/invites?email=${userEmail}`);
+      const invites = await res.json();
 
-    buddies.forEach(b => {
-      const li = document.createElement("li");
-      li.textContent = b;
-      buddyList.appendChild(li);
-    });
-  }
+      const buddyList = document.getElementById("buddyList");
+      buddyList.innerHTML = "";
 
-  // ===== Initialize Dashboard =====
-  window.addEventListener("load", () => {
-    if (!userEmail) {
-      alert("Please log in first!");
-      window.location.href = "/login.html";
-      return;
+      if (invites.length === 0) {
+        buddyList.innerHTML = "<li>No buddies yet.</li>";
+        return;
+      }
+
+      const buddies = new Set();
+      invites.forEach(i => {
+        buddies.add(i.userEmail === userEmail ? i.buddyEmail : i.userEmail);
+      });
+
+      buddies.forEach(b => {
+        const li = document.createElement("li");
+        li.textContent = b;
+        buddyList.appendChild(li);
+      });
     }
 
-    loadNearby();
-    loadNextWalk();
-    loadBuddies();
-  });
+    // ===== Initialize Dashboard =====
+    window.addEventListener("load", () => {
+      if (!userEmail) {
+        alert("Please log in first!");
+        window.location.href = "/login.html";
+        return;
+      }
+
+      loadNearby();
+      loadNextWalk();
+      loadBuddies();
+    });
 
   </script>
 
 </body>
+
 </html>
