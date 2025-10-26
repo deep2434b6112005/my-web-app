@@ -76,13 +76,12 @@
       </div>
     </section>
 
-    <!-- Dashboard -->
-    <section id="dashboard">
+<section id="dashboard">
       <h1>Your Walk Dashboard</h1>
       <div id="dashboard-content">
         <div class="dashboard-box">
           <h2>Walks Nearby</h2>
-          <ul>
+          <ul id="nearbyList">
             <li>Loading nearby walks...</li>
           </ul>
           <a href="map.html">View All Nearby Walkers →</a>
@@ -90,13 +89,15 @@
 
         <div class="dashboard-box">
           <h2>Your Next Walk</h2>
-          <p>Loading next walk...</p>
+          <div id="nextWalk">
+            <p>Loading next walk...</p>
+          </div>
           <a href="bookslot.html">View Details</a>
         </div>
 
         <div class="dashboard-box">
           <h2>Your Walk Buddies</h2>
-          <ul>
+          <ul id="buddyList">
             <li>Loading buddies...</li>
           </ul>
           <a href="friend.html">Manage Buddies</a>
@@ -242,4 +243,5 @@
     </script>
   </body>
 </html>
+
 
