@@ -1,36 +1,23 @@
-.head{
-    overflow-x: hidden;
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-    width: 100%;
-   box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-}
-.head button:hover{
-    background-color: blue;
-    color: white;
-}
+
 .bntsig,.bntlog{
     width: 100px;
     height: 30px;
     border-radius: 10px;
 }
-.intro{
-   
-    justify-content: space-around;
-    background-color: #e8f5e9;
-    padding: 30px;
-    border-radius: 10px;
-    margin-bottom: 30px;
+.about-the-app{
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 40px;
-    align-items: center;
+    grid-template-columns: 1fr 1fr;
 }
-
-.intro-left{
-  margin-left: 30px;
-  margin-top: 100px;
+.about-the-app img{
+    width: 100%;
+    height: 100%;
+}
+.about-the-app div{
+    display: flexbox;
+    padding: 20px;
+}
+.about-the-app-container1{
+   margin: 50PX;
 }
 .intro-left button{
   background-color: green; color: white;
@@ -112,21 +99,88 @@
 }
 
 
-
-
-.bar{
-  
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-  right: 2px;
-  padding-right: 20px;
-  padding-left: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+/* Bottom Navigation Bar */
+.bar {
   position: fixed;
-  bottom: 0px;
-  background-color:white;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
+
+/* Each icon+button group */
+.bar p {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Font Awesome Icons */
+.bar i {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+/* Buttons (clean, no border) */
+.bar button {
+  border: none;
+  background: none;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: color 0.3s ease;
+}
+
+/* Hover / active effects */
+.bar p:hover i,
+.bar p:hover button {
+  color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .bar {
+    padding: 6px 0;
+  }
+
+  .bar i {
+    font-size: 1.1rem;
+  }
+
+  .bar button {
+    font-size: 0.7rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bar {
+    justify-content: center;
+    gap: 60px;
+  }
+
+  .bar i {
+    font-size: 1.4rem;
+  }
+
+  .bar button {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
 .slot {
   background-color: #fff9c4;
   margin-bottom: 15px;
